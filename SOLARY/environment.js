@@ -1,4 +1,5 @@
 const Flags = require("./constValues")
+const {To2Dec} = require("./utils");
 
 class Environment {
     constructor(agent) {
@@ -79,10 +80,8 @@ class Environment {
             }
             i++
         }
-        this.x = bestCoords ? bestCoords.x : null
-        this.y = bestCoords ? bestCoords.y : null
-
-        console.log("Me: " + this.x + " " + this.y)
+        this.x = bestCoords ? To2Dec(bestCoords.x) : null
+        this.y = bestCoords ? To2Dec(bestCoords.y) : null
 
         //Find obj coords
         if (!this.x) {
@@ -112,11 +111,13 @@ class Environment {
                 continue
             }
             let vec = this.rotate(bestZeroVec, -o.direction)
-            o.x = this.x + vec.x * o.distance;
-            o.y = this.y + vec.y * o.distance;
+            o.x = To2Dec(this.x + vec.x * o.distance);
+            o.y = -To2Dec(this.y + vec.y * o.distance); // Crutch, needs to be fixed
             if (o.type === "enemy")
                 console.log("Enemy: " + o.x + " " + o.y)
         }
+        this.y *= -1; // Crutch, needs to be fixed
+        console.log("Me: " + this.x + " " + this.y)
     }
 
     calcMyCoords(flags) {
