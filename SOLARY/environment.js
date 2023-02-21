@@ -10,6 +10,7 @@ class Environment {
     }
 
     analyze(cmd, p) {
+
         if (cmd !== "see")
             return
         for (let i of p) {

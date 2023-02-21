@@ -9,6 +9,7 @@ if (args.y == null) args.y = 0
 if (args.version == null) args.version = 7
 if (args.manual == null) args.manual = false
 if (args.ranActions == null) args.ranActions = false
+if (args.speed == null) args.speed = null
 
 let agent = new Agent(args.team, args.speed, args.ranActions);
 socket(agent.bridge)

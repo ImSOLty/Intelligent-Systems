@@ -38,10 +38,10 @@ class Agent {
             if (data.p[1]) this.id = data.p[1]
         }
         this.analyzeAll(data.cmd, data.p)
-        if (this.tmpspeed === null && this.ranActions)
-            this.MakeRandomMove();
-        else
+        if (this.tmpspeed !== null)
             this.act = () => this.Turn(this.tmpspeed)
+        else if(this.ranActions)
+            this.MakeRandomMove();
         this.MakeAction()
     }
 
