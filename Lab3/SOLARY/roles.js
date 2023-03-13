@@ -5,9 +5,9 @@ const ANGLE_PRECISION = 15 // If greater angle to target - turn
 const DISTANCE_PRECISION = 0.5 // If greater - move
 const SEARCH_ANGLE = 90
 const MOVEMENT_SPEED = 100
-const RUN_SPEED = 250
+const RUN_SPEED = 120
 const DRIBBLE_FORCE = 25
-const KICK_FORCE = 100
+const KICK_FORCE = 90
 const GOAL_DISTANCE = 25
 
 class Role {
@@ -163,7 +163,8 @@ class Goalie extends Role {
 
     kickBall() {
         this.catched = false;
-        this.state = "calcBall"
+        this.state = "root"
+        this.ball = null;
         let angle = getAngleToTarget(this.env, this.env.zeroVec, this.agent.side === "r" ? Flags.gl : Flags.gr)
         return () => {
             this.controls.KickWithAngle(KICK_FORCE, -angle);
@@ -240,7 +241,7 @@ class Attacker extends Role {
         this.ball = null;
         this.state = "root"
         this.action = null;
-        this.targets = [{x: 20, y: 20}, {x: 20, y: -20}, Flags.gr]
+        this.targets = [ Flags.gr]
         this.targetNum = 0;
     }
 
@@ -340,12 +341,6 @@ class SubAttacker
                     if (this.attacker == null)
                         this.action = "searching"
                     else
-                        this.state = "turnToAttacker"
-                    break
-                case "turnToAttacker":
-                    if (!this.turned)
-                        this.action = "turn"
-                    else
                         this.state = "moveToAttacker"
                     break
                 case "moveToAttacker":
@@ -363,30 +358,18 @@ class SubAttacker
         switch (this.action) {
             case "searching":
                 return this.searching();
-            case "turn":
-                return this.turning()
             case "move":
-                return () => {
-                    this.controls.Dash(MOVEMENT_SPEED)
-                }
+                return this.goto(this.attacker, MOVEMENT_SPEED)
+
             case "wait":
-                return () => {
-                    this.controls.Dash(MOVEMENT_SPEED / 2)
-                }
+                return this.goto(this.attacker, MOVEMENT_SPEED / 4)
+
         }
     }
 
     searching() {
         return () => {
             this.controls.Turn(SEARCH_ANGLE);
-        }
-    }
-
-    turning() {
-        this.turned = true;
-        let angle = getAngleToTarget(this.env, this.env.zeroVec, this.attacker)
-        return () => {
-            this.controls.Turn(angle + 10)
         }
     }
 }
