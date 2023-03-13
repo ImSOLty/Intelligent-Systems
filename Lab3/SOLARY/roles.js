@@ -7,7 +7,7 @@ const SEARCH_ANGLE = 90
 const MOVEMENT_SPEED = 100
 const RUN_SPEED = 120
 const DRIBBLE_FORCE = 25
-const KICK_FORCE = 90
+const KICK_FORCE = 70
 const GOAL_DISTANCE = 25
 
 class Role {
@@ -60,7 +60,6 @@ class Goalie extends Role {
     constructor(agent) {
         super(agent);
         this.name = "goalie"
-        this.previousAction = null;
         this.previousBall = null;
         this.ball = null;
         this.state = "root";
@@ -104,8 +103,10 @@ class Goalie extends Role {
                         this.state = "blockGoal"
                     break;
                 case "readyToBlockGoal":
-                    if (calcDistance(this.env, this.ball) > DISTANCE_PRECISION * 6)
+                    if (tmpBall == null || calcDistance(this.env, this.ball) > DISTANCE_PRECISION * 6){
                         this.action = "rotateOnMemory"
+                        this.ball = {x: 0, y: 0}
+                    }
                     else
                         this.state = "blockGoal"
                     break
@@ -133,7 +134,6 @@ class Goalie extends Role {
 
     updateAction() {
         console.log(this.action)
-        this.previousAction = this.action;
         switch (this.action) {
             case "catch":
                 return this.catchBall();
@@ -164,7 +164,7 @@ class Goalie extends Role {
     kickBall() {
         this.catched = false;
         this.state = "root"
-        this.ball = null;
+        this.ball = {x: 0, y: 0};
         let angle = getAngleToTarget(this.env, this.env.zeroVec, this.agent.side === "r" ? Flags.gl : Flags.gr)
         return () => {
             this.controls.KickWithAngle(KICK_FORCE, -angle);
@@ -200,7 +200,7 @@ class Goalie extends Role {
     }
 
     findBall() {
-        if (this.previousBall != null) {
+        if (this.ball != null) {
             let angle = getAngleToTarget(this.env, this.env.zeroVec, this.previousBall)
             return () => {
                 this.controls.Turn(-angle);
@@ -241,7 +241,7 @@ class Attacker extends Role {
         this.ball = null;
         this.state = "root"
         this.action = null;
-        this.targets = [ Flags.gr]
+        this.targets = [{x:40,y: 10}, Flags.gr]
         this.targetNum = 0;
     }
 
