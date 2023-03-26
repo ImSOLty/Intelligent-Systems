@@ -1,0 +1,16 @@
+rcssserver-17.0.1
+
+Copyright (C) 1995, 1996, 1997, 1998, 1999 Electrotechnical Laboratory.
+2000 - RoboCup Soccer Simulator Maintenance Group.
+
+Simulator Random Seed: 1679843256
+CSVSaver: Ready
+STDOutSaver: Ready
+Using simulator's random seed as Hetero Player Seed: 1679843256
+wind factor: rand: 0.000000, vector: (0.000000, 0.000000)
+
+Hit CTRL-C to exit
+A new (v7) player (SOLARY 1) connected.
+A new (v7) player (NONSOLARY 1) connected.
+A new (v4) monitor connected.
+Kick_off_left
